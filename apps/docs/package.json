@@ -1,0 +1,14 @@
+{
+  "name": "docs",
+  "private": true,
+  "scripts": {
+    "build": "pnpm docs:build",
+    "docs:dev": "vitepress dev",
+    "docs:build": "vitepress build",
+    "docs:preview": "vitepress preview"
+  },
+  "author": "Luca Goslar <luca@zugriff.eu>",
+  "devDependencies": {
+    "vitepress": "^1.2.2"
+  }
+}

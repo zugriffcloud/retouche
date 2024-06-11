@@ -1,0 +1,41 @@
+{
+  "name": "retouche",
+  "version": "0.0.0",
+  "description": "Edit Retouche-compatible applications",
+  "type": "module",
+  "homepage": "https://retouche.zugriff.eu",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zugriffcloud/retouche.git"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.umd.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./README.md": "./README.md",
+    "./LICENSE": "./LICENSE"
+  },
+  "files": [
+    "dist",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "test": "vitest run"
+  },
+  "keywords": [
+    "cms",
+    "retouche"
+  ],
+  "author": "Luca Goslar <luca@zugriff.eu>",
+  "license": "MIT",
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^3.1.1",
+    "autoprefixer": "^10.4.19",
+    "postcss-pxtorem": "^6.1.0",
+    "sass": "^1.77.4",
+    "svelte": "^4.2.17"
+  }
+}

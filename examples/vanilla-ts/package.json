@@ -1,0 +1,20 @@
+{
+  "name": "vanilla-ts",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "retouche": "workspace:*",
+    "@retouche/adapter-github": "workspace:*"
+  },
+  "devDependencies": {
+    "vite-plugin-retouche": "workspace:*",
+    "typescript": "^5.2.2",
+    "vite": "^5.2.0"
+  }
+}

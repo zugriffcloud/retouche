@@ -1,0 +1,38 @@
+{
+  "name": "vite-plugin-retouche",
+  "version": "0.0.0",
+  "description": "Build Retouche-compatible applications with Vite",
+  "homepage": "https://retouche.zugriff.eu",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zugriffcloud/retouche.git"
+  },
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.umd.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./README.md": "./README.md",
+    "./LICENSE": "./LICENSE"
+  },
+  "files": [
+    "dist",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "test": "vitest run"
+  },
+  "keywords": [
+    "cms",
+    "vite",
+    "retouche"
+  ],
+  "peerDependencies": {
+    "vite": "^5"
+  },
+  "author": "Luca Goslar <luca@zugriff.eu>",
+  "license": "MIT"
+}
