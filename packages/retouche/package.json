@@ -1,6 +1,6 @@
 {
   "name": "retouche",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Edit Retouche-compatible applications",
   "type": "module",
   "homepage": "https://retouche.zugriff.eu",
