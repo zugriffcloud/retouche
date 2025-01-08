@@ -118,7 +118,7 @@ const retouche: (options?: {
     for (let element of matches) {
       let source = element[0].match(/src=(['"])(.*?)(?<!\\)\1/);
       if (!source) continue;
-      let location = source[2].match(/(?:\${(.*?)})|.+/)![1];
+      let location = source[2].match(/(?:\${(.*?)})|.+/)![1] || source[2];
       if (!location) continue;
 
       if (!location.startsWith('/') && !location.startsWith('.')) {
