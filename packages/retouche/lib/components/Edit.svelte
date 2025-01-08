@@ -12,8 +12,13 @@
       return;
     }
 
-    await publish();
-    disabled = true;
+    try {
+      disabled = true;
+      await publish();
+    } catch (error) {
+      disabled = false;
+      throw error;
+    }
   }
 </script>
 
