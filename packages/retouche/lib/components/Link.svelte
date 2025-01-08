@@ -60,7 +60,8 @@
 
 <div
   class="container"
-  style="height: {sizing.height}px; width: {sizing.width}px; top: {sizing.top}px; left: {sizing.left}px"
+  style="height: {sizing.height}px; width: {sizing.width}px; top: {sizing.top +
+    (window?.scrollY || 0)}px; left: {sizing.left + (window?.scrollX || 0)}px"
 >
   <span class="label">{element.tagName.toLowerCase()}</span>
   <input
