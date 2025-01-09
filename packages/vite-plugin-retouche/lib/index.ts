@@ -41,8 +41,9 @@ const retouche: (options?: {
       }
       let checksum = adler32(src);
 
+      let originalSrc = (' ' + src).slice(1);
       let text = textMatches(path, checksum, src);
-      let link = linkMatches(path, checksum, text);
+      let link = linkMatches(path, checksum, text, originalSrc);
       let media = await mediaMatches(path, link);
 
       for (let plugin of options.plugins) {
@@ -65,10 +66,13 @@ const retouche: (options?: {
     id: string,
     checksum: number,
     src: string,
+    original: string,
     offset: number = 0
   ): string {
+    offset += src.length - original.length;
+
     const matches = Array.from(
-      src.matchAll(
+      original.matchAll(
         /(<\s*(?!\/\s*)(\S*?)\s(?:[\s\S](?!>|<|\/))*?data-retouche-link(?=[\s\/>])((?=[\s>]?)[\S\s]*?\/?\s*>))/gm
       )
     );
