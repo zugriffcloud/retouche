@@ -134,3 +134,17 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 
 Changes made through the Retouche editor can be published in no time using GitHub Actions or GitLab CI/CD pipelines.  
 [Explore](https://github.com/zugriffcloud/retouche/blob/main/.github/workflows/zugriff.yml) how Retouche integrates with [zugriff](https://www.zugriff.eu) on GitHub.
+
+To avoid concurrent deployments, add the following to your workflow.
+
+::: code-group
+
+```yml [GitHub]
+jobs:
+  deploy:
+    concurrency:
+      group: deploy
+      cancel-in-progress: true
+```
+
+:::
