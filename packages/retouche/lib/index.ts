@@ -245,7 +245,7 @@ function adler32(value: string) {
     b = b + a;
   }
 
-  return (b << 16) + a;
+  return Math.abs((b << 16) + a);
 }
 
 function fromBase64(input: string): string {

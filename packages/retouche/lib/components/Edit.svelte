@@ -1,14 +1,19 @@
 <script lang="ts">
-  export let edit: () => Promise<void>;
-  export let publish: () => Promise<void>;
+  import { increaseTrigger } from './store';
 
-  let editing = false;
-  let disabled = false;
+  let {
+    edit,
+    publish,
+  }: { edit: () => Promise<void>; publish: () => Promise<void> } = $props();
+
+  let editing = $state(false);
+  let disabled = $state(false);
 
   async function clicked() {
     if (!editing) {
       editing = true;
       await edit();
+      increaseTrigger();
       return;
     }
 
@@ -31,11 +36,11 @@
       published.
     </p>
     <div class="footer">
-      <button on:click={clicked}>Edit</button>
+      <button onclick={clicked}>Edit</button>
     </div>
   </div>
 {:else}
-  <button class="publish" on:click={clicked} {disabled}>Publish</button>
+  <button class="publish" onclick={clicked} {disabled}>Publish</button>
 {/if}
 
 <style lang="scss">

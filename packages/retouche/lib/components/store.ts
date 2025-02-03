@@ -16,9 +16,16 @@ export let replacements: {
 
 export const trigger = writable(0);
 
-window.addEventListener('resize', () => {
-  trigger.set(get(trigger) + 1);
-});
+window.addEventListener('resize', increaseTrigger);
+
+export function increaseTrigger() {
+  let count = get(trigger) + 1;
+  if (count < 100000) {
+    trigger.set(count + 1);
+  } else {
+    trigger.set(0);
+  }
+}
 
 export function clean() {
   targeted = {};

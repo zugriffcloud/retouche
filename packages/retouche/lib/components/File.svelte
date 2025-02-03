@@ -3,7 +3,8 @@
   import { replacements, trigger } from './store';
   import { get } from 'svelte/store';
 
-  export let element: HTMLElement;
+  let { element }: { element: HTMLElement } = $props();
+
   let backup = '';
 
   if (
@@ -14,11 +15,11 @@
   }
 
   element.style.pointerEvents = 'none';
-  let sizing = element.getBoundingClientRect();
+  let sizing = $state(element.getBoundingClientRect());
   let path = decodeURIComponent(element.getAttribute('data-retouche-file')!);
   let format = path.split('/').pop()!.split('.');
   format.shift();
-  let accept: string | undefined = undefined;
+  let accept: string | undefined = $state(undefined);
   if (format.length > 0) {
     accept = '.' + format.join('.');
   }
@@ -77,8 +78,8 @@
   }
 
   onMount(() => {
-    size();
     let unsubscribe = trigger.subscribe(size);
+    size();
 
     return () => {
       unsubscribe();
@@ -96,7 +97,7 @@
     style="height: {sizing.height}px; width: {sizing.width}px"
     type="file"
     bind:this={input}
-    on:change={change}
+    onchange={change}
     {accept}
   />
 </div>

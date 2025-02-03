@@ -2,8 +2,9 @@
   import { onMount } from 'svelte';
   import { targeted, trigger } from './store';
 
-  export let element: HTMLElement;
-  let sizing = element.getBoundingClientRect();
+  let { element }: { element: HTMLElement } = $props();
+
+  let sizing = $state(element.getBoundingClientRect());
 
   let [path, _checksum, _from, _to] = element
     .getAttribute('data-retouche-link')!
@@ -41,22 +42,17 @@
     sizing = element.getBoundingClientRect();
   }
 
-  let href = element.getAttribute('href');
+  let href = $state(element.getAttribute('href'));
 
   onMount(() => {
+    let unsubscribe = trigger.subscribe(size);
     size();
-
-    let unsubscribe = trigger.subscribe(() => {
-      size();
-    });
 
     return () => {
       unsubscribe();
     };
   });
 </script>
-
-<svelte:window on:resize={size} />
 
 <div
   class="container"
@@ -68,7 +64,7 @@
     type="text"
     style="width: {sizing.width}px"
     bind:value={href}
-    on:input={update}
+    oninput={update}
   />
 </div>
 

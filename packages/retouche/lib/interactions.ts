@@ -6,6 +6,7 @@ import Edit from '$lib/components/Edit.svelte';
 import { Interactions } from '$lib/index';
 
 import { replacements, targeted } from '$lib/components/store';
+import { mount } from 'svelte';
 
 let token: string | null = null;
 
@@ -17,31 +18,16 @@ export const interactions: Interactions = {
     alert('Published!');
   },
   async renderEditableLink(element) {
-    new Link({
-      target: document.body,
-      props: { element },
-    });
+    mount(Link, { target: document.body, props: { element } });
   },
   async renderEditableFile(element) {
-    new Arbitrary({
-      target: document.body,
-      props: { element },
-    });
+    mount(Arbitrary, { target: document.body, props: { element } });
   },
   async renderEditableText(element) {
-    new Text({
-      target: document.body,
-      props: { element },
-    });
+    mount(Text, { target: document.body, props: { element } });
   },
   async renderInit(edit, publish) {
-    new Edit({
-      target: document.body,
-      props: {
-        edit,
-        publish,
-      },
-    });
+    mount(Edit, { target: document.body, props: { edit, publish } });
   },
   unauthorised(path) {
     if (!path) {

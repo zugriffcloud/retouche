@@ -1,10 +1,11 @@
 <script lang="ts">
   import { get } from 'svelte/store';
-  import { targeted, trigger } from './store';
+  import { increaseTrigger, targeted, trigger } from './store';
   import { onMount } from 'svelte';
 
-  export let element: HTMLElement;
-  let sizing = element.getBoundingClientRect();
+  let { element }: { element: HTMLElement } = $props();
+
+  let sizing = $state(element.getBoundingClientRect());
   let contenteditable = element.getAttribute('contenteditable');
 
   element.setAttribute('contenteditable', 'true');
@@ -22,7 +23,7 @@
   }
 
   function update() {
-    trigger.set(get(trigger) + 1);
+    increaseTrigger();
 
     let clone = element.cloneNode(true);
 
@@ -74,9 +75,8 @@
   }
 
   onMount(() => {
-    size();
-
     let unsubscribe = trigger.subscribe(size);
+    size();
 
     element.addEventListener('input', update);
 

@@ -17,18 +17,18 @@
     "@commitlint/config-conventional": "^19.7.1",
     "@rollup/plugin-typescript": "^12.1.2",
     "@types/node": "^22.13.0",
-    "@typescript-eslint/eslint-plugin": "^8.22.0",
+    "@typescript-eslint/eslint-plugin": "^8.23.0",
     "commitizen": "^4.3.1",
     "commitlint": "^19.7.1",
     "eslint": "^9.19.0",
     "eslint-plugin-svelte": "^2.46.1",
     "husky": "^9.1.7",
     "prettier": "^3.4.2",
-    "rollup": "^4.34.0",
+    "rollup": "^4.34.1",
     "typescript": "^5.7.3",
     "vite": "^6.0.11",
     "vite-plugin-dts": "^4.5.0",
     "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^3.0.4"
+    "vitest": "^3.0.5"
   }
 }

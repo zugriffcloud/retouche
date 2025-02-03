@@ -33,6 +33,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
     <div class="card">
       <button id="counter" type="button"></button>
     </div>
+
     <p class="read-the-docs" data-retouche>
       Click on the Vite and TypeScript logos to learn more
     </p>
