@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "vite-plugin-retouche": "workspace:*",
-    "typescript": "^5.2.2",
-    "vite": "^5.2.0"
+    "typescript": "^5.7.3",
+    "vite": "^6.0.11"
   }
 }

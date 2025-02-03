@@ -31,7 +31,7 @@
     "retouche"
   ],
   "peerDependencies": {
-    "vite": "^5"
+    "vite": "^6"
   },
   "author": "Luca Goslar <luca@zugriff.eu>",
   "license": "MIT"
