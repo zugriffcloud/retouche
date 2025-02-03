@@ -1,5 +1,11 @@
 # vite-plugin-retouche
 
+## 0.2.0
+
+### Minor Changes
+
+- bd75e5a: fix offset and use absolute hashing numbers
+
 ## 0.1.0
 
 ### Minor Changes
