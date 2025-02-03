@@ -14,7 +14,8 @@ const retouche: (options?: {
       config: ResolvedConfig,
       path: string,
       checksum: number,
-      source: string
+      source: string,
+      original: string
     ) => Promise<string>
   >;
 }) => Plugin = (options = { root: cwd(), plugins: [] }) => {
@@ -41,71 +42,177 @@ const retouche: (options?: {
       }
       let checksum = adler32(src);
 
-      let originalSrc = (' ' + src).slice(1);
-      let text = textMatches(path, checksum, src);
-      let link = linkMatches(path, checksum, text, originalSrc);
-      let media = await mediaMatches(path, link);
+      let original = src.slice(0);
+      let code = extractor(path, checksum, src, original.slice(0));
+      code = await mediaMatches(path, code);
 
       for (let plugin of options.plugins) {
-        media = await plugin({ root: options.root })(
+        code = await plugin({ root: options.root })(
           config,
           path,
           checksum,
-          src
+          src,
+          original.slice(0)
         );
       }
 
       return {
-        code: media,
+        code,
         map: null,
       };
     },
   };
 
-  function linkMatches(
+  function extractor(
     id: string,
     checksum: number,
     src: string,
     original: string,
-    offset: number = 0
+    offset: number = 0,
+    pseudoOffset: number = 0
   ): string {
-    offset += src.length - original.length;
-
     const matches = Array.from(
-      original.matchAll(
-        /(<\s*(?!\/\s*)(\S*?)\s(?:[\s\S](?!>|<|\/))*?data-retouche-link(?=[\s\/>])((?=[\s>]?)[\S\s]*?\/?\s*>))/gm
+      src.matchAll(
+        /(<\s*(?!\/\s*)(\S*?)\s(?:[\s\S](?!>|<|\/))*?(data-retouche(?:(?:-link))?)(?=[\s\/>])((?=[\s>]?)[\S\s]*?\/?\s*>))((?<!\/\s*>)(([\S\s]*?)(<\s*\/\s*\2\s*>)))?/gim
       )
     );
 
-    for (let element of matches) {
-      let links = Array.from(
-        element[0].matchAll(/href=(['"])(.*?)(?<!\\)\1/gm)
-      );
-      if (links.length == 1) {
-        let index =
-          offset + element.index + element[0].length - element[3].length;
-        let a = src.slice(0, index);
-        let b = src.slice(index);
+    for (let match of matches) {
+      let code = '';
 
-        let link = links[0];
-
-        let ident =
-          '="' +
-          encodeURIComponent(id) +
-          ':' +
-          checksum +
-          ':' +
-          (element.index + link.index + "href='".length) +
-          ':' +
-          (element.index + link.index + link[0].length - 1) +
-          '"';
-
-        src = a + ident + b;
-        offset += ident.length;
+      if (match[3].toLowerCase() == 'data-retouche-link') {
+        code = linkMatch(
+          id,
+          checksum,
+          match[0],
+          original,
+          offset + pseudoOffset + match.index
+        );
+      } else {
+        code = textMatch(
+          id,
+          checksum,
+          match[0],
+          original,
+          offset + pseudoOffset + match.index
+        );
       }
+
+      let a = src.slice(0, offset + match.index);
+      let b = src.slice(offset + match.index + match[0].length);
+
+      offset += code.length - match[0].length;
+      src = a + code + b;
     }
 
     return src;
+  }
+
+  function linkMatch(
+    id: string,
+    checksum: number,
+    src: string,
+    original: string,
+    offset: number
+  ): string {
+    const matches = Array.from(
+      src.matchAll(
+        /(<\s*(?!\/\s*)(\S*?)\s(?:[\s\S](?!>|<|\/))*?data-retouche-link(?=[\s\/>])((?=[\s>]?)[\S\s]*?\/?\s*>))((?<!\/\s*>)(([\S\s]*?)(<\s*\/\s*\2\s*>)))?/gim
+      )
+    );
+    let match = matches[0];
+
+    let links = Array.from(match[0].matchAll(/href=(['"])(.*?)(?<!\\)\1/gm));
+    let link = links[0];
+
+    let ident =
+      '="' +
+      encodeURIComponent(id) +
+      ':' +
+      checksum +
+      ':' +
+      (offset + match.index + link.index + "href='".length) +
+      ':' +
+      (offset + match.index + link.index + link[0].length - 1) +
+      '"';
+
+    let a;
+    let b;
+
+    if (match[6]) {
+      a = match[1].slice(0, match[1].length - match[3].length);
+      b =
+        match[3] +
+        extractor(
+          id,
+          checksum,
+          match[6],
+          original,
+          0,
+          offset + match[1].length + ident.length
+        ) +
+        match[7];
+    } else {
+      let index = match.index + match[0].length - match[3].length;
+      a = src.slice(0, index);
+      b = src.slice(index);
+    }
+
+    return a + ident + b;
+  }
+
+  function textMatch(
+    id: string,
+    checksum: number,
+    src: string,
+    original: string,
+    offset: number
+  ): string {
+    const matches = Array.from(
+      src.matchAll(
+        /(<\s*(?!\/\s*)(\S*?)\s(?:[\s\S](?!>|<|\/))*?data-retouche(?=[\s\/>])((?=[\s>]?)[\S\s]*?\/?\s*>))((?<!\/\s*>)(([\S\s]*?)(<\s*\/\s*\2\s*>)))?/gim
+      )
+    );
+    let match = matches[0];
+
+    if (/\/\s*>$/.test(match[3])) {
+      return src;
+    }
+
+    const ident =
+      '="' +
+      encodeURIComponent(id) +
+      ':' +
+      checksum +
+      ':' +
+      (offset + match[1].length) +
+      ':' +
+      (offset + match[7].length) +
+      '"';
+
+    let a;
+    let b;
+
+    if (match[6]) {
+      a = match[1].slice(0, match[1].length - match[3].length);
+      b =
+        match[3] +
+        extractor(
+          id,
+          checksum,
+          match[6],
+          original,
+          0,
+          offset + match[1].length + ident.length
+        ) +
+        match[7];
+    } else {
+      let index = match.index + match[1].length - match[3].length;
+      a = src.slice(0, index);
+      b = src.slice(index);
+    }
+
+    return a + ident + b;
   }
 
   async function mediaMatches(
@@ -173,89 +280,9 @@ const retouche: (options?: {
 
     return src;
   }
-
-  function textMatches(
-    id: string,
-    checksum: number,
-    src: string,
-    offset: number = 0,
-    nested: string | null = null,
-    nestedOffset: number = 0
-  ): string {
-    const matches = Array.from(
-      (nested ?? src)
-        .toLowerCase()
-        .matchAll(
-          /(<\s*(?!\/\s*)(\S*?)\s(?:[\s\S](?!>|<|\/))*?data-retouche(?=[\s\/>])((?=[\s>]?)[\S\s]*?\/?\s*>))((?<!\/\s*>)(([\S\s]*?)(<\s*\/\s*\2\s*>)))?/gm
-        )
-    );
-
-    for (let match of matches) {
-      const fullMatch = match[0];
-      const fullTagWithWhitespace = match[1];
-      const afterAttributeUntilOpeningTagEnd = match[3] || '';
-      const closingTagWithWhitespace = match[7];
-
-      let actualContentOriginal = src.slice(
-        match.index + offset + fullTagWithWhitespace.length,
-        match.index +
-          offset +
-          fullMatch.length -
-          (closingTagWithWhitespace?.length || 0)
-      );
-
-      let a = src.slice(
-        0,
-        match.index +
-          offset +
-          (fullTagWithWhitespace.length -
-            afterAttributeUntilOpeningTagEnd.length)
-      );
-
-      let b = src.slice(match.index + offset + fullMatch.length);
-
-      const ident =
-        '="' +
-        encodeURIComponent(id) +
-        ':' +
-        checksum +
-        ':' +
-        (nestedOffset + match.index + fullTagWithWhitespace.length) +
-        ':' +
-        (nestedOffset +
-          match.index +
-          fullTagWithWhitespace.length +
-          actualContentOriginal.length) +
-        '"';
-
-      src =
-        a +
-        ident +
-        afterAttributeUntilOpeningTagEnd +
-        actualContentOriginal +
-        (closingTagWithWhitespace || '') +
-        b;
-      offset += ident.length;
-
-      if (closingTagWithWhitespace) {
-        let nestedSrc = textMatches(
-          id,
-          checksum,
-          src,
-          match.index + offset + fullTagWithWhitespace.length,
-          actualContentOriginal,
-          nestedOffset + match.index + fullTagWithWhitespace.length
-        );
-        offset += nestedSrc.length - src.length;
-        src = nestedSrc;
-      }
-    }
-
-    return src;
-  }
 };
 
-function adler32(value: string) {
+function adler32(value: string): number {
   let a = 1;
   let b = 0;
 
@@ -264,12 +291,15 @@ function adler32(value: string) {
     b = b + a;
   }
 
-  return (b << 16) + a;
+  return Math.max((b << 16) + a);
 }
 
-async function doesFileExist(path: string) {
+async function doesFileExist(path: string): Promise<boolean> {
   let resolver;
-  let promise = new Promise((resolve) => (resolver = resolve));
+  let promise: Promise<boolean> = new Promise(
+    (resolve) => (resolver = resolve)
+  );
+
   try {
     fs.access(path, fs.constants.R_OK, (err) => {
       if (!err) {
