@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { get } from 'svelte/store';
   import { increaseTrigger, targeted, trigger } from './store';
   import { onMount } from 'svelte';
 
