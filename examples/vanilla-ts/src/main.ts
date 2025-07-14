@@ -32,6 +32,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
     <h1 data-retouche>Vite + TypeScript + Retouche + zugriff</h1>
     <div class="card">
       <button id="counter" type="button"></button>
+   Vite + TypeScript + Retouche (v0.2.0) + zugriff</button>
     </div>
 
     <p class="read-the-docs" data-retouche>
