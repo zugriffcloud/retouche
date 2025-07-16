@@ -236,7 +236,7 @@ export function init(options: {
   };
 }
 
-function adler32(value: string) {
+function adler32(value: string): number {
   let a = 1;
   let b = 0;
 
