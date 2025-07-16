@@ -29,7 +29,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
     <a data-retouche-link href="https://www.typescriptlang.org/" target="_blank">
       <img data-retouche-file src="${typescriptLogo}" class="logo vanilla" alt="TypeScript logo" />
     </a>
-    <h1 data-retouche>Vite + TypeScript + Retouche + zugriff</h1>
+    <h1 data-retouche>Vite + TypeScript + Retouche (v0.2.0) + zugriff</h1>
     <div class="card">
       <button id="counter" type="button"></button>
     </div>
