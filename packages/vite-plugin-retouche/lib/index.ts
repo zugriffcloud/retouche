@@ -86,7 +86,7 @@ const retouche: (options?: {
           checksum,
           match[0],
           original,
-          offset + pseudoOffset + match.index
+          pseudoOffset + match.index
         );
       } else {
         code = textMatch(
@@ -94,7 +94,7 @@ const retouche: (options?: {
           checksum,
           match[0],
           original,
-          offset + pseudoOffset + match.index
+          pseudoOffset + match.index
         );
       }
 
@@ -136,11 +136,22 @@ const retouche: (options?: {
       (offset + match.index + link.index + link[0].length - 1) +
       '"';
 
+    // console.log(
+    //   'editable link',
+    //   original.slice(
+    //     offset + match.index + link.index + "href='".length,
+    //     offset + match.index + link.index + link[0].length - 1
+    //   )
+    // );
+
     let a;
     let b;
 
+    let openOpeningTagEndIndex =
+      match.index + match[1].length - match[3].length; // e.g. `<p data-retouche*HERE*`
+
     if (match[6]) {
-      a = match[1].slice(0, match[1].length - match[3].length);
+      a = match[1].slice(0, openOpeningTagEndIndex);
       b =
         match[3] +
         extractor(
@@ -149,13 +160,12 @@ const retouche: (options?: {
           match[6],
           original,
           0,
-          offset + match[1].length + ident.length
+          offset + match.index + match[1].length
         ) +
         match[7];
     } else {
-      let index = match.index + match[0].length - match[3].length;
-      a = src.slice(0, index);
-      b = src.slice(index);
+      a = src.slice(0, openOpeningTagEndIndex);
+      b = src.slice(openOpeningTagEndIndex);
     }
 
     return a + ident + b;
@@ -185,16 +195,27 @@ const retouche: (options?: {
       ':' +
       checksum +
       ':' +
-      (offset + match[1].length) +
+      (offset + match.index + match[1].length) +
       ':' +
-      (offset + match[7].length) +
+      (offset + match.index + match[0].length - match[7].length) +
       '"';
+
+    // console.log(
+    //   'editable text',
+    //   original.slice(
+    //     offset + match.index + match[1].length,
+    //     offset + match.index + match[0].length - match[7].length
+    //   )
+    // );
 
     let a;
     let b;
 
+    let openOpeningTagEndIndex =
+      match.index + match[1].length - match[3].length; // e.g. `<p data-retouche*HERE*`
+
     if (match[6]) {
-      a = match[1].slice(0, match[1].length - match[3].length);
+      a = src.slice(0, openOpeningTagEndIndex);
       b =
         match[3] +
         extractor(
@@ -203,13 +224,12 @@ const retouche: (options?: {
           match[6],
           original,
           0,
-          offset + match[1].length + ident.length
+          offset + match.index + match[1].length
         ) +
         match[7];
     } else {
-      let index = match.index + match[1].length - match[3].length;
-      a = src.slice(0, index);
-      b = src.slice(index);
+      a = src.slice(0, openOpeningTagEndIndex);
+      b = src.slice(openOpeningTagEndIndex);
     }
 
     return a + ident + b;
@@ -291,7 +311,7 @@ function adler32(value: string): number {
     b = b + a;
   }
 
-  return Math.max((b << 16) + a);
+  return Math.abs((b << 16) + a);
 }
 
 async function doesFileExist(path: string): Promise<boolean> {
