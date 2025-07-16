@@ -3,4 +3,4 @@
 'retouche': minor
 ---
 
-bump dependencies
+bump dependencies and fix editable location
