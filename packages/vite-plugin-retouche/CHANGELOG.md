@@ -1,5 +1,11 @@
 # vite-plugin-retouche
 
+## 0.3.0
+
+### Minor Changes
+
+- 36b5fd2: bump dependencies and fix editable location
+
 ## 0.2.0
 
 ### Minor Changes
