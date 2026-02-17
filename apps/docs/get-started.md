@@ -140,6 +140,8 @@ To avoid concurrent deployments, add the following to your workflow.
 ::: code-group
 
 ```yml [GitHub]
+# Learn more about GitHub Actions concurrency at https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency
+
 jobs:
   deploy:
     concurrency:
