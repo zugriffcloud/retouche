@@ -1,6 +1,6 @@
 import { resolve } from 'path';
 import { defineConfig } from 'vite';
-import dts from 'vite-plugin-dts';
+import dts from 'unplugin-dts/vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
@@ -20,7 +20,7 @@ export default defineConfig({
   plugins: [
     tsconfigPaths(),
     dts({
-      rollupTypes: true,
+      bundleTypes: true,
     }),
   ],
 });
