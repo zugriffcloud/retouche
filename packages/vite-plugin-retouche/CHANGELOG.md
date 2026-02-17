@@ -1,5 +1,11 @@
 # vite-plugin-retouche
 
+## 0.3.1
+
+### Patch Changes
+
+- b0c9922: bump dependencies
+
 ## 0.3.0
 
 ### Minor Changes

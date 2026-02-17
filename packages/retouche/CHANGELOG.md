@@ -1,5 +1,11 @@
 # retouche
 
+## 0.2.1
+
+### Patch Changes
+
+- b0c9922: bump dependencies
+
 ## 0.2.0
 
 ### Minor Changes
