@@ -21,7 +21,7 @@ export default defineConfig({
         text: 'Examples',
         link: 'https://github.com/zugriffcloud/retouche/tree/main/examples/',
       },
-      { text: 'Demo', link: '//cms.zugriff.app/?edit' },
+      { text: 'Demo', link: '//retouche.examples.zugriff.eu/?edit' },
       { text: 'zugriff', link: '//www.zugriff.eu' },
     ],
 
@@ -50,7 +50,7 @@ export default defineConfig({
 
     footer: {
       message:
-        '<a href="//zugriff.eu/legal">Imprint</a> - <a href="//zugriff.eu/legal">Privacy Policy</a>',
+        '<a href="//zugriff.eu/en/imprint">Imprint</a> - <a href="//zugriff.eu/en/privacy-policy">Privacy Policy</a>',
     },
   },
 });
