@@ -1,0 +1,5 @@
+---
+'retouche': patch
+---
+
+bump dependencies
