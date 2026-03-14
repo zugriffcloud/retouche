@@ -1,5 +1,11 @@
 # retouche
 
+## 0.2.2
+
+### Patch Changes
+
+- 408b016: bump dependencies
+
 ## 0.2.1
 
 ### Patch Changes
