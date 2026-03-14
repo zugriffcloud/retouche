@@ -1,6 +1,6 @@
 import { resolve } from 'path';
 import { defineConfig } from 'vite';
-import dts from 'unplugin-dts/vite';
+import dts from 'unplugin-dts/rollup';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
@@ -17,10 +17,5 @@ export default defineConfig({
       external: ['vite', 'node:process', 'node:fs', 'node:path'],
     },
   },
-  plugins: [
-    tsconfigPaths(),
-    dts({
-      bundleTypes: true,
-    }),
-  ],
+  plugins: [tsconfigPaths(), dts({ bundleTypes: true, include: './lib' })],
 });
