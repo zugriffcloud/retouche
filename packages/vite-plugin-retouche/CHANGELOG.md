@@ -1,5 +1,11 @@
 # vite-plugin-retouche
 
+## 0.4.0
+
+### Minor Changes
+
+- 408b016: upgrade vite from v7 to v8 and bump dependencies
+
 ## 0.3.1
 
 ### Patch Changes
